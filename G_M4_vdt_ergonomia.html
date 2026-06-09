@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M4 – Dove Fa Male? Ergonomia e VDT alla Reception</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a237e,#283593,#303f9f);min-height:100vh;overflow:hidden;display:flex;justify-content:center;align-items:center}
+.container{background:#fff;width:800px;height:550px;display:flex;flex-direction:column;border-radius:10px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.header{background:linear-gradient(135deg,#1a237e,#283593);color:#fff;padding:10px 18px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.header h1{font-size:15px;font-weight:700}.header p{font-size:11px;opacity:.8;margin-top:1px}
+button{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s}
+.btn-white{background:#fff;color:#1a237e}.btn-white:hover{background:#e8eaf6}
+.btn-outline{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4)}.btn-outline:hover{background:rgba(255,255,255,.25)}
+.btn-group{display:flex;gap:8px}
+.content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.hidden{display:none!important}
+
+/* ISTRUZIONI */
+.instr{padding:18px 24px;overflow-y:auto;flex:1}
+.instr h2{color:#1a237e;font-size:16px;margin-bottom:10px}
+.instr p,.instr li{font-size:13px;line-height:1.6;color:#444;margin-bottom:5px}
+.instr ul{margin-left:18px;margin-bottom:10px}
+.how-grid{display:flex;gap:10px;margin:10px 0}
+.how-step{flex:1;background:#e8eaf6;border-radius:8px;padding:10px;text-align:center;font-size:12px;color:#1a237e;font-weight:600;line-height:1.5}
+.how-step .num{font-size:22px;display:block;margin-bottom:4px}
+.start-btn{background:linear-gradient(135deg,#1a237e,#283593);color:#fff;padding:11px 32px;font-size:14px;border-radius:8px;display:block;margin:14px auto 0;cursor:pointer;border:none;font-weight:600}
+.start-btn:hover{transform:translateY(-2px)}
+
+/* GAME */
+.game-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:10px 14px;gap:8px}
+.progress-row{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.prog-bar{flex:1;height:6px;background:#eee;border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#1a237e,#7986cb);border-radius:3px;transition:width .4s}
+.score-badge{background:#283593;color:#fff;border-radius:20px;padding:2px 12px;font-size:12px;font-weight:700}
+.prog-label{font-size:12px;color:#555;font-weight:600}
+
+.game-body{flex:1;display:flex;gap:12px;min-height:0;overflow:hidden}
+
+/* LEFT PANEL */
+.left-panel{width:430px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;min-width:0}
+.question-box{background:#e8eaf6;border-left:4px solid #3949ab;border-radius:8px;padding:10px 12px;flex-shrink:0}
+.mansione-tag{display:inline-block;background:#3949ab;color:#fff;border-radius:4px;padding:1px 8px;font-size:10px;font-weight:700;letter-spacing:.5px;margin-bottom:5px}
+.question-text{font-size:12px;font-weight:600;color:#1a237e;line-height:1.4}
+.zones-list{display:flex;flex-direction:column;gap:6px;flex:1;justify-content:center}
+.zone-btn{background:#fff;border:2px solid #c5cae9;border-radius:8px;padding:6px 10px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;font-family:'Segoe UI',sans-serif;text-align:left}
+.zone-btn:hover:not(:disabled){border-color:#3949ab;background:#e8eaf6;transform:translateX(3px)}
+.zone-btn:disabled{cursor:not-allowed}
+.zone-num{width:22px;height:22px;border-radius:5px;background:#3949ab;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.zone-label{font-size:12px;font-weight:600;color:#14087e}
+.zone-btn.correct{border-color:#2e7d32;background:#e8f5e9}
+.zone-btn.correct .zone-num{background:#2e7d32}
+.zone-btn.correct .zone-label{color:#1b5e20}
+.zone-btn.wrong{border-color:#c62828;background:#ffebee}
+.zone-btn.wrong .zone-num{background:#c62828}
+.zone-btn.wrong .zone-label{color:#b71c1c}
+.zone-btn.reveal{border-color:#2e7d32;background:#e8f5e9;opacity:.75}
+.zone-btn.reveal .zone-num{background:#2e7d32}
+.feedback-box{background:#e3f2fd;border-left:3px solid #1565c0;border-radius:6px;padding:8px 10px;font-size:11px;color:#0d47a1;line-height:1.5;flex-shrink:0;display:none}
+.feedback-box.show{display:block}
+.next-btn{background:linear-gradient(135deg,#1a237e,#283593);color:#fff;padding:7px 18px;font-size:12px;border-radius:7px;display:none;cursor:pointer;border:none;font-weight:600;align-self:flex-end;flex-shrink:0}
+.next-btn.show{display:block}
+
+/* RIGHT PANEL */
+.body-panel{flex:1;position:relative;display:flex;align-items:center;justify-content:center}
+.body-img{height:100%;max-height:380px;width:auto;display:block;object-fit:contain;user-select:none;pointer-events:none}
+.hspot{position:absolute;border-radius:50%;border:2.5px dashed #3949ab;background:rgba(57,73,171,.12);display:flex;align-items:center;justify-content:center;transition:all .3s;pointer-events:none}
+.hspot .hspot-num{font-size:11px;font-weight:700;color:#3949ab;background:none;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center}
+.hspot.correct{border-color:#2e7d32;background:rgba(46,125,50,.25);border-style:solid;animation:pop .3s ease}
+.hspot.correct .hspot-num{color:#1b5e20;background:none}
+.hspot.wrong{border-color:#c62828;background:rgba(198,40,40,.2);border-style:solid}
+.hspot.wrong .hspot-num{color:#b71c1c;background:none}
+.hspot.reveal{border-color:#2e7d32;background:rgba(46,125,50,.2);border-style:solid}
+.hspot.reveal .hspot-num{color:#1b5e20}
+@keyframes pop{0%{transform:translate(-50%,-50%) scale(0)}60%{transform:translate(-50%,-50%) scale(1.3)}100%{transform:translate(-50%,-50%) scale(1)}}
+
+/* RESULT */
+.result-page{flex:1;display:flex;align-items:center;justify-content:center;padding:20px}
+.result-box{text-align:center;max-width:480px}
+.result-icon{font-size:55px;margin-bottom:12px}
+.result-box h2{font-size:20px;font-weight:700;color:#1a237e;margin-bottom:8px}
+.result-box p{font-size:13px;color:#555;line-height:1.6;margin-bottom:15px}
+.result-score{background:#e8eaf6;border-radius:10px;padding:10px 20px;font-size:15px;font-weight:700;color:#1a237e;margin-bottom:15px;display:inline-block}
+.result-btns{display:flex;gap:10px;justify-content:center}
+.btn-prim{background:linear-gradient(135deg,#1a237e,#283593);color:#fff;padding:10px 24px;font-size:13px;border-radius:8px;cursor:pointer;border:none;font-weight:600}
+.btn-sec{background:#78909c;color:#fff;padding:10px 24px;font-size:13px;border-radius:8px;cursor:pointer;border:none;font-weight:600}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>🖥️ Dove Fa Male? Ergonomia e VDT alla Reception</h1>
+      <p>Modulo 4 – Videoterminale, postura seduta e movimenti ripetitivi</p>
+    </div>
+    <div class="btn-group">
+      <button class="btn-outline" onclick="resetGame()">🔄 Ricomincia</button>
+      <button class="btn-white" onclick="window.close()">✕ Esci</button>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- ISTRUZIONI -->
+    <div id="instrPage" class="instr">
+      <h2>🎯 Come funziona</h2>
+      <p>Ti vengono descritte <strong>8 situazioni reali</strong> della reception. Per ciascuna devi identificare quale zona del corpo viene sovraccaricata cliccando il nome corretto a sinistra. Sul corpo a destra trovi le 5 zone numerate.</p>
+      <div class="how-grid">
+        <div class="how-step"><span class="num">📖</span>Leggi la situazione</div>
+        <div class="how-step"><span class="num">👆</span>Clicca la zona sovraccaricata</div>
+        <div class="how-step"><span class="num">🦴</span>La zona si illumina sul corpo</div>
+      </div>
+      <ul>
+        <li>Le 5 zone numerate: <strong>1 Occhi · 2 Collo · 3 Schiena · 4 Polso/Mano · 5 Spalle</strong></li>
+        <li>Verde = corretto · Rosso = sbagliato, si rivela la zona giusta</li>
+      </ul>
+      <button class="start-btn" onclick="startGame()">▶ Inizia</button>
+    </div>
+
+    <!-- GIOCO -->
+    <div id="gamePage" class="game-wrap hidden">
+      <div class="progress-row">
+        <span class="score-badge">Domanda <span id="curNum">1</span>/8</span>
+        <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+        <span class="prog-label">Corrette: <span id="scoreNum">0</span></span>
+      </div>
+      <div class="game-body">
+        <div class="left-panel">
+          <div class="question-box">
+            <div class="mansione-tag" id="mansioneTag"></div>
+            <div class="question-text" id="questionText"></div>
+          </div>
+          <div class="zones-list" id="zonesList"></div>
+          <div class="feedback-box" id="feedbackBox"></div>
+          <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Domanda successiva →</button>
+        </div>
+        <div class="body-panel" id="bodyPanel">
+          <img src="images/human-body.jpg" alt="Corpo umano" class="body-img" id="bodyImg">
+          <div class="hspot" id="hs-occhi"   style="top:14%;left:50%;width:34px;height:15px;transform:translate(-50%,-50%)"><div class="hspot-num"></div></div>
+          <div class="hspot" id="hs-collo"   style="top:20%;left:50%;width:34px;height:24px;transform:translate(-50%,-50%)"><div class="hspot-num"></div></div>
+          <div class="hspot" id="hs-schiena" style="top:42%;left:50%;width:60px;height:30px;transform:translate(-50%,-50%);border-radius:20px"><div class="hspot-num"></div></div>
+          <div class="hspot" id="hs-polso"   style="top:41%;left:28%;width:32px;height:32px;transform:translate(-50%,-50%)"><div class="hspot-num"></div></div>
+          <div class="hspot" id="hs-spalle"  style="top:26%;left:50%;width:85px;height:28px;transform:translate(-50%,-50%);border-radius:17px"><div class="hspot-num"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RISULTATO -->
+    <div id="resultPage" class="result-page hidden">
+      <div class="result-box">
+        <div class="result-icon" id="resultIcon"></div>
+        <h2 id="resultTitle"></h2>
+        <p id="resultText"></p>
+        <div class="result-score" id="resultScore"></div>
+        <div class="result-btns">
+          <button class="btn-prim" onclick="resetGame()">🔄 Rigioca</button>
+          <button class="btn-sec" onclick="window.close()">Torna al corso</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ZONES = [
+  {id:'occhi',   num:1, label:'1 – Occhi e vista'},
+  {id:'collo',   num:2, label:'2 – Collo'},
+  {id:'schiena', num:3, label:'3 – Schiena'},
+  {id:'polso',   num:4, label:'4 – Polso e mano'},
+  {id:'spalle',  num:5, label:'5 – Spalle'},
+];
+
+const QUESTIONS = [
+  {
+    mansione:'🖥️ Reception – Monitor troppo basso',
+    question:'L\'addetto lavora tutto il turno con il monitor posizionato sotto il piano di lavoro. Per leggere lo schermo tiene la testa piegata in avanti continuamente. Quale zona accumula tensione?',
+    correct:'collo',
+    feedback:'Il monitor sotto il livello degli occhi obbliga a flettere il collo in avanti per ore. Il bordo superiore del monitor deve essere all\'altezza degli occhi o leggermente al di sotto, per mantenere il collo in posizione neutra.'
+  },
+  {
+    mansione:'🖥️ Reception – Lavoro al videoterminale per ore',
+    question:'Dopo 4 ore consecutive al monitor senza pause, l\'addetto avverte bruciore, visione sfocata e difficoltà a mettere a fuoco gli oggetti lontani. Quale zona è affaticata?',
+    correct:'occhi',
+    feedback:'L\'affaticamento visivo è il disturbo più frequente tra chi lavora al VDT. La legge prevede una pausa di 15 minuti ogni 120 minuti di lavoro continuativo allo schermo. Ogni 20 minuti guardare un punto lontano per 20 secondi riduce il carico sui muscoli oculari.'
+  },
+  {
+    mansione:'📞 Reception – Telefonate prolungate',
+    question:'Durante le telefonate lunghe l\'addetto tiene il telefono tra la spalla e l\'orecchio per liberare le mani e continuare a digitare. Quale zona viene sovraccaricata in modo asimmetrico?',
+    correct:'spalle',
+    feedback:'Tenere il telefono tra spalla e orecchio comprime i muscoli laterali del collo e della spalla in modo asimmetrico. Nel tempo causa contratture croniche. La soluzione è usare sempre un auricolare o il vivavoce durante le telefonate che richiedono l\'uso contemporaneo delle mani.'
+  },
+  {
+    mansione:'🖥️ Reception – Sedia troppo alta',
+    question:'La sedia non è stata regolata: è troppo alta rispetto al piano di lavoro. L\'addetto lavora con le braccia sollevate per raggiungere la tastiera e il mouse. Quale zona si affatica?',
+    correct:'spalle',
+    feedback:'Quando la sedia è troppo alta le braccia devono essere sollevate per raggiungere la tastiera: le spalle restano contratte per ore. La sedia va regolata all\'inizio di ogni turno: gomiti a 90°, braccia rilassate, polsi dritti sulla tastiera.'
+  },
+  {
+    mansione:'🖥️ Reception – Digitazione intensiva',
+    question:'Dopo ore di digitazione intensa e uso del mouse l\'addetto avverte formicolio alle dita, specialmente al pollice, all\'indice e al medio, e debolezza nella presa. Quale struttura è a rischio?',
+    correct:'polso',
+    feedback:'Formicolio alle dita e debolezza nella presa sono segnali precoci della sindrome del tunnel carpale, la malattia professionale più frequente per chi lavora al VDT. Va segnalata al medico competente tempestivamente: trattata in fase precoce risponde bene.'
+  },
+  {
+    mansione:'🖥️ Reception – Schiena senza supporto',
+    question:'L\'addetto lavora seduto sul bordo della sedia senza appoggiarsi allo schienale. Lo schienale non raggiunge la zona lombare. A fine turno ha dolore alla schiena bassa. Quale zona è sovraccaricata?',
+    correct:'schiena',
+    feedback:'Sedersi sul bordo della sedia o senza supporto lombare obbliga i muscoli paravertebrali a lavorare continuamente per mantenere la posizione verticale. Lo schienale deve sostenere tutta la schiena fino alle spalle con la curva lombare in appoggio.'
+  },
+  {
+    mansione:'🖥️ Reception – Monitor con riflessi',
+    question:'La postazione è di fronte a una finestra. La luce diretta sul monitor crea riflessi costanti: l\'addetto sporge il collo in avanti e strizza gli occhi per leggere lo schermo. Quale zona è più colpita?',
+    correct:'occhi',
+    feedback:'I riflessi sul monitor costringono gli occhi a uno sforzo continuo per compensare il contrasto. Il monitor va posizionato perpendicolare alla finestra, mai di fronte né con la luce alle spalle. Le tende o le veneziane devono poter essere regolate durante il turno.'
+  },
+  {
+    mansione:'🖥️ Reception – Tastiera troppo lontana',
+    question:'La tastiera è posizionata in fondo alla scrivania: l\'addetto deve allungare le braccia in avanti per digitare, tenendo i gomiti sollevati e le spalle tese per tutta la durata del turno. Quale zona è sovraccaricata?',
+    correct:'polso',
+    feedback:'Con la tastiera troppo lontana i polsi non sono dritti: si piegano verso l\'alto per compensare la distanza. Questa posizione prolungata affatica i tendini del polso. La tastiera deve essere vicina al corpo, con i gomiti a 90° e i polsi in posizione neutra durante la digitazione.'
+  },
+];
+
+let cur=0, score=0, shuffled=[];
+
+function startGame(){
+  cur=0;score=0;
+  shuffled=[...QUESTIONS].sort(()=>Math.random()-.5);
+  document.getElementById('scoreNum').textContent='0';
+  loadQuestion();
+  showPage('gamePage');
+}
+
+function resetHotspots(){
+  ZONES.forEach(z=>{
+    const hs=document.getElementById('hs-'+z.id);
+    if(hs)hs.classList.remove('correct','wrong','reveal');
+  });
+}
+
+function loadQuestion(){
+  if(cur>=QUESTIONS.length){endGame();return;}
+  const q=shuffled[cur];
+  document.getElementById('curNum').textContent=cur+1;
+  document.getElementById('progFill').style.width=((cur/QUESTIONS.length)*100)+'%';
+  document.getElementById('mansioneTag').textContent=q.mansione;
+  document.getElementById('questionText').textContent=q.question;
+  document.getElementById('feedbackBox').className='feedback-box';
+  document.getElementById('nextBtn').className='next-btn';
+  resetHotspots();
+
+  const list=document.getElementById('zonesList');
+  list.innerHTML='';
+  [...ZONES].sort(()=>Math.random()-.5).forEach(z=>{
+    const btn=document.createElement('button');
+    btn.className='zone-btn';
+    btn.innerHTML=`<span class="zone-num">${z.num}</span><span class="zone-label">${z.label}</span>`;
+    btn.onclick=()=>answer(z.id,btn,q);
+    list.appendChild(btn);
+  });
+}
+
+function answer(zoneId,el,q){
+  document.querySelectorAll('.zone-btn').forEach(b=>b.disabled=true);
+  const isCorrect=zoneId===q.correct;
+  if(isCorrect){
+    score++;document.getElementById('scoreNum').textContent=score;
+    el.classList.add('correct');
+    document.getElementById('hs-'+zoneId)?.classList.add('correct');
+  } else {
+    el.classList.add('wrong');
+    document.getElementById('hs-'+zoneId)?.classList.add('wrong');
+    document.querySelectorAll('.zone-btn').forEach(b=>{
+      const numEl=b.querySelector('.zone-num');
+      const zone=ZONES.find(z=>z.num===parseInt(numEl?.textContent));
+      if(zone&&zone.id===q.correct)b.classList.add('reveal');
+    });
+    document.getElementById('hs-'+q.correct)?.classList.add('reveal');
+  }
+  const fb=document.getElementById('feedbackBox');
+  fb.innerHTML='<b>'+(isCorrect?'✓ Corretto!':'✗ Non corretto.')+'</b> '+q.feedback;
+  fb.classList.add('show');
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function nextQuestion(){cur++;loadQuestion();}
+
+function endGame(){
+  const pct=Math.round((score/QUESTIONS.length)*100);
+  document.getElementById('resultIcon').textContent=pct>=75?'🎉':pct>=50?'👍':'💪';
+  document.getElementById('resultTitle').textContent=pct>=75?'Ottima conoscenza!':pct>=50?'Buona base!':'Riprova!';
+  document.getElementById('resultText').textContent='Una postazione VDT corretta protegge occhi, collo, schiena, polsi e spalle. I segnali precoci vanno segnalati al medico competente senza aspettare che diventino disturbi cronici.';
+  document.getElementById('resultScore').textContent='Risposte corrette: '+score+'/'+QUESTIONS.length;
+  showPage('resultPage');
+}
+
+function resetGame(){showPage('instrPage');}
+function showPage(id){
+  ['instrPage','gamePage','resultPage'].forEach(p=>document.getElementById(p).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+</script>
+</body>
+</html>
